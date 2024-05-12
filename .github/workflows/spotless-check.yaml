@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   spotless-check:
@@ -26,19 +29,36 @@ jobs:
       - name: Install JDK 16
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-16-jdk
-          export JAVA_HOME=/usr/lib/jvm/java-16-openjdk-amd64
+          sudo apt-get install -y wget
+          wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
+          sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+          sudo apt-get update
+          sudo apt-get install -y adoptopenjdk-16-hotspot
+          export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-16-hotspot-amd64
           export PATH=$JAVA_HOME/bin:$PATH
           java -version
 
       - name: Spotless Apply
-        run: mvn spotless:apply
+        id: spotless
+        run: mvn spotless:check
 
       - name: Check Spotless Status
         run: |
           git status
           git diff --exit-code
+        if: steps.spotless.outcome == 'success'
 
       - name: Fail on Spotless Check Failure
-        if: failure()
+        if: steps.spotless.outcome != 'success'
         run: exit 1
+
+      - name: Commit changes
+        run: git commit -am "Apply spotless formatting"
+        if: steps.spotless.outcome == 'success'
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+        if: steps.spotless.outcome == 'success'
