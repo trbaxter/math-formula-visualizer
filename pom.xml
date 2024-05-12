@@ -82,6 +82,23 @@
 			<version>0.8.12</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.11.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>6.1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<version>3.2.5</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -106,7 +123,6 @@
 				<version>${spotless.version}</version>
 				<configuration>
 					<!-- optional: limit format enforcement to just the files changed by this feature branch -->
-					<ratchetFrom>origin/main</ratchetFrom>
 					<formats>
 						<!-- you can define as many formats as you want, each is independent -->
 						<format>
