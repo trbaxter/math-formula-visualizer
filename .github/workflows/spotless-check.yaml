@@ -20,12 +20,8 @@ jobs:
           distribution: 'adopt'
           java-version: '16'
 
-      - name: Get main branch name
-        id: main_branch_name
-        run: echo "::set-output name=name::$(git rev-parse --abbrev-ref main)"
-
       - name: Run Spotless Apply
-        run: mvn spotless:apply -DratchetFrom=${{ steps.main_branch_name.outputs.name }}
+        run: mvn spotless:apply -DratchetFrom=main
 
   spotless-check:
     name: Spotless Check
