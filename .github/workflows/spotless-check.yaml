@@ -33,16 +33,11 @@ jobs:
 
       - name: Run Spotless Check
         run: |
-    # Check if it's the first commit
           if git rev-parse --quiet --verify HEAD^; then
-    # Get the list of modified files in the current commit
           git diff --name-only HEAD^ HEAD > modified_files.txt
           else
-    # Get a list of all files in the repository
           git ls-files > modified_files.txt
           fi
-
-    # Run Spotless Check only on the modified files
           mvn spotless:check -DspotlessFiles=$(cat modified_files.txt)
         continue-on-error: true
 
