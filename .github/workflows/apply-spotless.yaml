@@ -1,0 +1,23 @@
+name: Spotless Apply
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  spotless-apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '22'
+
+      - name: Run Spotless Apply
+        run: mvn spotless:apply
