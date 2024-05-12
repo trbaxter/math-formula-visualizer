@@ -42,12 +42,15 @@ jobs:
 
     steps:
       - name: Run Spotless Apply
-        run: mvn spotless:apply
-        continue-on-error: true
+        run: |
+          git diff --name-only HEAD^ HEAD > modified_files.txt
+          mvn spotless:apply -DspotlessFiles=$(cat modified_files.txt)
 
-      - name: Re-run Spotless Apply if Failed
+      - name: Re-run Spotless if Failed
         if: ${{ failure() }}
-        run: mvn spotless:apply
+        run: |
+          git diff --name-only HEAD^ HEAD > modified_files.txt
+          mvn spotless:apply -DspotlessFiles=$(cat modified_files.txt)
 
   merge-verify:
     name: Merge Verify
