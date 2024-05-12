@@ -10,15 +10,25 @@ jobs:
     name: Spotless Check
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Install JDK 22
         run: |
-          sudo add-apt-repository ppa:openjdk-r/ppa -y
-          sudo apt-get update -q
-          sudo apt-get install -y openjdk-22-jdk
+          wget https://download.java.net/java/early_access/jdk22/2/GPL/openjdk-22_linux-x64_bin.tar.gz
+          tar xvf openjdk-22_linux-x64_bin.tar.gz
+          export JAVA_HOME=$PWD/jdk-22
+          export PATH=$JAVA_HOME/bin:$PATH
           java -version
 
       - name: Spotless Apply
