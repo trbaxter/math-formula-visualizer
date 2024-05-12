@@ -1,1 +1,1 @@
-# math-formula-visualizer
+# Math Formula Visualizer
