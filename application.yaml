@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+
+spring:
+  main:
+    banner-mode: "off"
+  application: math-formula-visualizer
