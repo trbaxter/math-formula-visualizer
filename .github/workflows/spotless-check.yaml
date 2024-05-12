@@ -30,8 +30,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y wget
-          wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --dearmor | sudo tee /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg >/dev/null 2>&1
-          echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
+          sudo apt-get install -y gnupg
+          wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --import
+          echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
           sudo apt-get update
           sudo apt-get install -y adoptopenjdk-16-hotspot
           export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-16-hotspot-amd64
