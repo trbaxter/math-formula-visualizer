@@ -1,4 +1,4 @@
-name: Apply Spotless
+name: Spotless Check
 
 on:
   push:
@@ -7,27 +7,28 @@ on:
 
 jobs:
   spotless-check:
-    name: Apply Spotless
+    name: Spotless Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '22.0.1'
+      - name: Install JDK 22
+        run: |
+          sudo add-apt-repository ppa:openjdk-r/ppa -y
+          sudo apt-get update -q
+          sudo apt-get install -y openjdk-22-jdk
+          java -version
 
-      - name: Apply Spotless
-        run: mvn spotless:apply
-        continue-on-error: false
-
-      - name: Retry Apply Spotless if failed
-        if: ${{ failure() && github.run_number == 1 }}
+      - name: Spotless Apply
         run: mvn spotless:apply
 
       - name: Check Spotless Status
         run: |
           git status
           git diff --exit-code
+
+      - name: Fail on Spotless Check Failure
+        if: failure()
+        run: exit 1
